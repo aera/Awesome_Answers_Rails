@@ -1,0 +1,136 @@
+allain:awesome_answers$ rails g model answer question:references body:text
+allain:awesome_answers$ rails db:migrate
+
+
+******USER SIGNUP*******************
+generate user model
+migrate
+validation in model... email regex & password
+generate user controller
+  new  create methods
+new file user view (new.html.erb)
+  make a form
+routes... 1 line
+  restart server
+
+add link in application.html.erb
+|
+  <%= link_to 'Sign Up', new_user_path %>
+
+back to UsersController
+  add params & finish create method
+...try out the form
+
+*****addtl
+...flash something... added notice/alert in @user.save in user controller
+on appl.html.erb... add flash divs
+edit application.css in assets/stylesheets  (pigments package in atom)
+
+
+****USER LOGIN****
+g sessions controller
+routes... resources sessions.... no model
+..create form for login (views/session... new.html.erb)
+... link in app.html.erb(sign in)
+
+sessions_controller (new, create, destroy) user authentication
+... at this point, there is a session, but what to do?
+    must refer to authenticated user for that session
+    ...edit application_controller in app/controller (user_signed_in?, current_user, helper_method (x2))
+
+    edit app.html.erb (Hello), user.rb (full_name)
+
+    logout (implement destroy session in SessionsController)
+    edit app.html.erb (sign out)
+    edit users controller for session user_id
+
+    add a control so deleted users are signed out automatically
+    edit ApplicationController in user_signed_in?   etc.
+    edit QuestionsController before_action
+    edit AnswersController before_action
+
+    edit show.html.erb in views/questions (if user_signed_in?)
+
+******ADD which user created question or answer
+rails g migration add_user_to_question user:references
+  edit migration for index:true in foreign_key
+  db:migrate
+
+edit question.rb & answer.rb & user.rb (belongs to user)
+edit question show view to display author/commentor
+
+edit seeds.rb... author/commentor.... user table destroy reseed users... users.sample
+db:seed
+
+--done!
+
+
+*****User Authorization ******
+
+added '&& @question.user == current_user ' in  questions show.html.erb
+edit edit method on question controller to check if the user is allowed the action
+edited routes to root instead of home (opt, convention)... replace all home_path to root_path
+added a before_action in question controller to authorize_user! method
+  implement authorize_user! by cut/paste of previous edit method
+  changed to head :unauthorized (convention)
+
+...installed Postman app in Chrome...
+
+...install gem cancancan...
+rails g cancan:ability
+edit ability.rb in model folder (new User and can :manage)
+  reedit questions show.html.erb (also in anser each do)... now an author of the question can delete the answer to his question
+  reedit authorize_user! in question controller
+  edit answer controller
+
+**adding Admin user**
+add boolean field to users table for is_admin? string for multiple levels of users
+  rails g migration add_is_admin_to_users is_admin:boolean
+  default ^ false
+---to make an admin... in rails console..
+u = User.new
+u.update is_admin:true
+
+**separating admin controller
+rails g controller admin/dashboard
+edit routes for namespace admin
+edit admin dashboard controller
+new index.html.erb file in dashboard view
+check in localhost:3000/admin/dashboard
+*** base controller for admin
+new file base_controller.rb (not rails g)
+edit orig dashboard contr to class Admin::DashboardController < Admin::BaseController   ... inherit
+
+***handling Asset pipeline
+get a dragon pic
+place it in app/assets/images
+go to the page it's displayed...... makje sure it has image_tag.... rails takes care of hash
+
+...sass... compiled into ONE HTML req before
+
+bootstrap...added gem... then bootstrap override file
+.
+.
+.
+rails assets:precompile RAILS_ENV=production
+  rails produces uglified and compressed versions of code assets before deployment
+
+*****deploying to heroku*****
+sign up
+pass: heroheroheroku  (with one space before)
+
+install heroku....link in slack (use the S/O one for noob)
+
+heroku create aa-allain
+
+
+
+
+
+
+
+
+
+
+
+...
