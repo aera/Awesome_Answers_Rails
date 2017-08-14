@@ -15,9 +15,15 @@ gem 'puma', '~> 3.7'
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 5.0'
 # Use Uglifier as compressor for JavaScript assets
-
+gem 'rack-cors'
+gem 'delayed_job_active_record'
+gem 'delayed_job_web'
+gem 'pry'
 gem 'bootstrap-sass', '~> 3.3.6'
-
+gem 'simple_form'
+gem 'active_model_serializers'
+gem 'carrierwave'
+gem 'mini_magick'
 
 gem 'uglifier', '>= 1.3.0'
 # See https://github.com/rails/execjs#readme for more supported runtimes
@@ -32,9 +38,11 @@ gem 'jbuilder', '~> 2.5'
 # Use ActiveModel has_secure_password
 gem 'bcrypt', '~> 3.1.7'
 gem 'cancancan'
+gem 'font-awesome-rails'
 
 gem 'cowsay'
 gem 'faker', github: 'stympy/faker'
+gem 'jquery-rails'
 
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
@@ -55,7 +63,9 @@ group :development do
   gem 'awesome_print'
   gem 'interactive_editor'
   gem 'hirb'
+  gem 'letter_opener'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
+gem "rspec-rails", :group => [:development, :test]

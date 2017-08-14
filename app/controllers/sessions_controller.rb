@@ -7,17 +7,17 @@ class SessionsController < ApplicationController
     # 1. Find the user by their email
     # 2. If found, we authenticate the user with the given password
     # 3. If authentication not successful, we alert the user with wrong credentials
-
-    user = User.find_by(email: params[:email])
+    user = User.find_by(email: session_params[:email])
 
     # user && user.authenticate(params[:password])
     # &. can be used in place of the dot operator when calling methods on
     # objects. It gives us a way to against NoMethod for nil:Class errors.
     # It will immeditely return `nil` instead of calling the method after
     # it unless the object before is not `nil`.
-    if user&.authenticate(params[:password])   #  '&.' = user && user.authenticate(params[:password])
+    if user&.authenticate(session_params[:password])
       session[:user_id] = user.id
-      redirect_to root_path, notice: 'Thank you for signing in!'
+      # flash[:notice] = 'Thank you for signing in! â¤ï¸'
+      redirect_to root_path, notice: 'Thank you for signing in! â¤ï¸'
     else
       flash.now[:alert] = 'Wrong email or password!'
       render :new
@@ -27,5 +27,10 @@ class SessionsController < ApplicationController
   def destroy
     session[:user_id] = nil
     redirect_to root_path, notice: 'Signed out!'
+  end
+
+  private
+  def session_params
+    params.require(:session).permit(:email, :password)
   end
 end

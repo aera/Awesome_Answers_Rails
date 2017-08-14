@@ -1,4 +1,13 @@
 Rails.application.routes.draw do
+  # using the defaults argument, we can provide a set of options that will act as the new defaults for the nested routes. in this case, every route inside the api namespace will render json by default instead of html.
+  namespace :api, defaults: { format: :json } do
+    namespace :v1 do
+      resources :questions, only: [:index, :show, :create]
+    end
+  end
+
+
+  match "/delayed_job" => DelayedJobWeb, anchor: false, via: [:get, :post]
   # the `namespace` feature of Rails routes will add the name space as section
   # of the URL so in this case all routes defined within this `admin` namespace
   # will be prepended with `/admin` so the url index for `dahsbaord` will be:
@@ -21,11 +30,25 @@ Rails.application.routes.draw do
   resource :session, only: [:new, :create, :destroy]
   resources :users, only: [:new, :create]
 
+  # Here we want vote routes to be nested inside of answers without
+    # creating any routes for the answers themselves. This is why we provide
+    # `resources :answers` with the only argument with an empty array.
+
+    # the `shallow: true` argument will only nested routes for those that require it
+    # such `:create`, `:index` and `:new`. All other routes that don't require the
+    # parent resource will be by themselves
+    resources :answers, only: [], shallow: true do
+      resources :votes, only: [:create, :destroy, :update]
+      # /answers/:answer_id/votes
+      # /votes/:id
+    end
+
   # POST /questions/5/answers
 
   # resources :questions, except: [:delete]
   # resources :questions, only: [:index, :show
   resources :questions do
+    resources :likes, only: [:create, :destroy]
     resources :answers, only: [:create, :destroy]
     # We can nest routes. When doing so, rails will generate the route prefix
     # with the parent resources in this `/questions/:question_id`

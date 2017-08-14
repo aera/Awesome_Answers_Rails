@@ -1,4 +1,6 @@
 class Answer < ApplicationRecord
+  has_many :votes, dependent: :destroy
+  has_many :voters, through: :votes, source: :user
   # When the Answer was generated, it was given the `question:references` column.
   # This automatically added the following line `belongs_to :question` which tells
   # Rails that in the association between Answer-Question, Answer holds the foreign_key,
@@ -17,4 +19,8 @@ class Answer < ApplicationRecord
   belongs_to :user
 
   validates :body, presence: true
+
+  def vote_total
+    votes.up.count - votes.down.count
+  end
 end

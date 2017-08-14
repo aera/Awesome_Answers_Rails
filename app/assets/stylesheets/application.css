@@ -10,9 +10,32 @@
  * files in this directory. Styles in this file should be added after the last require_* statement.
  * It is generally better to create a new file per style scope.
  *
+ *= require font-awesome
  *= require_tree .
  *= require_self
  */
+
+ .voting-widget {
+   width: 75px;
+   flex-shrink: 0;
+   display: flex;
+   flex-flow: column;
+   align-items:center;
+   justify-content: center;
+ }
+
+ .voting-widget a.active > i {
+    color: LightBlue;
+}
+
+ .answer-list {
+    list-style: none;
+    padding-left: 0;
+}
+ .answer-list> li {
+    display: flex;
+    margin: 10px 0;
+}
 
  .field_with_errors input, .field_with_errors textarea {
    border: medium solid red;
@@ -30,3 +53,13 @@
  .alert.alert-danger {
    background-color: Salmon;
  }
+
+ .question-details {
+  display: flex;
+  flex-flow: row;
+}
+
+.question-details > img {
+  width: 30vw;
+  height: auto;
+}

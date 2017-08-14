@@ -1,0 +1,21 @@
+
+	<div class="navbar-wrapper container">
+	<nav class="navbar navbar-default navbar-fixed-top ml-auto">
+	  <div class="context">
+			<ul class=class="nav nav-navbar">
+			<% if user_signed_in? %>
+			  <li class="nav-item"> Hello <%= current_user.first_name %> </li>
+				<li class="nav-item"> <%= link_to 'Sign Out', sessions_path, method: :delete %> </li>
+		  <% else %>
+		    <li class="nav-item"> <%= link_to 'Sign Up', new_user_path %> </li>
+				<li class="divider-vertical"></li>
+				<li class="nav-item"> <%= link_to 'Sign In', new_session_path %> </li>
+		  <% end %>
+			</ul>
+	  </div>
+	</nav>
+	</div
+
+
+
+<div class="form-group">

@@ -1,4 +1,11 @@
 class Question < ApplicationRecord
+  mount_uploader :image, ImageUploader
+  has_many :taggings, dependent: :destroy
+  has_many :tags, through: :taggings
+
+  has_many :likes, dependent: :destroy
+  has_many :likers, through: :likes, source: :user
+
   # Like `belongs_to`, `has_many` tells Rails that Question is associated to
   # the Answer model.
   has_many :answers, dependent: :destroy
@@ -47,6 +54,22 @@ class Question < ApplicationRecord
   def self.recent(count)
     order({ created_at: :desc }).limit(count)
   end
+
+  def tag_list
+    # tags.map { |tag| tag.name }
+    tags.map(&:name).join(", ")
+  end
+
+  # We can create methods that are called `setters`. They
+  # simulate an instance attribute. When assigning a value to it,
+  # it is instead passed as argument to the method.
+  def tag_list=(value)
+    self.tags = value.split(/\s*,\s*/).map do |name|
+      Tag.where(name: name.downcase).first_or_create!
+    end
+  end
+  # usage:
+  # question.tag_list = 'some,thing,etc'
 
   private
 

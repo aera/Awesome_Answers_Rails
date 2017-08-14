@@ -13,6 +13,19 @@ class QuestionsController < ApplicationController
 
   def index
     @questions = Question.order(created_at: :desc)
+
+    # respond_to enables us to send different response types depending on
+    # the format requested
+    respond_to do |format|
+      # `html` is the default format. In this case, render will just show
+      # the view `questions/index.html.erb`
+      format.html { render }
+      # ActiveRecord objects have the `to_json` method. When using `render`
+      # with the `json:` argument with a ActiveRecord object, it will automatically
+      # use the method `to_json` to convert it into json format and send it.
+      format.json { render json: @questions }
+      format.xml { render xml: @questions }
+    end
   end
 
   # The New action is usually used to show a form of
@@ -44,6 +57,7 @@ class QuestionsController < ApplicationController
 
   def show
     @answer = Answer.new
+    @like = @question.likes.find_by(user: current_user)
     # Using association methods just builds queries, meaning that
     # we can continue chaining more and more query methods such order, limit, offset, where
     # , etc
@@ -66,6 +80,7 @@ class QuestionsController < ApplicationController
     @question.user = current_user
 
     if @question.save
+      QuestionReminderJob.set(wait: 5.days).perform_later(@question_id)
       # redirect_to question_path(id: @question.id)
       # redirect_to question_path(@question.id)
       redirect_to question_path(@question)
@@ -79,7 +94,7 @@ class QuestionsController < ApplicationController
 
   private
   def question_params
-    params.require(:question).permit(:title, :body)
+    params.require(:question).permit(:title, :body, :tag_list, :image)
     # The params object is avaible in all controllers and it gives you
     # access to all the data coming from a form or url params
 

@@ -79,7 +79,7 @@ added a before_action in question controller to authorize_user! method
 ...install gem cancancan...
 rails g cancan:ability
 edit ability.rb in model folder (new User and can :manage)
-  reedit questions show.html.erb (also in anser each do)... now an author of the question can delete the answer to his question
+  reedit questions show.html.erb (also in answer each do)... now an author of the question can delete the answer to his question
   reedit authorize_user! in question controller
   edit answer controller
 
@@ -122,9 +122,13 @@ pass: heroheroheroku  (with one space before)
 install heroku....link in slack (use the S/O one for noob)
 
 heroku create aa-allain
+git push heroku master
+heroku run rails db:migrate
+heroku run rails db:seed
+heroku run console
 
 
-
+**********day 32 - More on TDD
 
 
 
