@@ -71,6 +71,35 @@ class Question < ApplicationRecord
   # usage:
   # question.tag_list = 'some,thing,etc'
 
+  include AASM
+  aasm whiny_transitions: false do
+    state :draft, initial: true
+    state :published
+    state :canceled
+    state :answered
+    state :closed
+
+    event :publish do
+      transitions from: [:draft, :answered], to: :published   #:answered in case of a user deleting an answer
+    end
+
+    event :close do
+      transitions from: [:published, :answered], to: :closed
+    end
+
+    event :cancel do
+      transitions from: [:published, :answered], to: :canceled
+    end
+
+    event :answer do
+      transitions from: [:published, :answered], to: :answered
+    end
+  end
+
+  def self.viewable
+    where(aasm_state: [:published, :closed, :answered]).order(created_at: :desc)
+  end
+
   private
 
   def no_monkey

@@ -12,7 +12,7 @@ class QuestionsController < ApplicationController
   before_action :authorize_user!, only: [:edit, :destroy, :update]
 
   def index
-    @questions = Question.order(created_at: :desc)
+    @questions = Question.viewable
 
     # respond_to enables us to send different response types depending on
     # the format requested
@@ -93,6 +93,7 @@ class QuestionsController < ApplicationController
   end
 
   private
+  
   def question_params
     params.require(:question).permit(:title, :body, :tag_list, :image)
     # The params object is avaible in all controllers and it gives you

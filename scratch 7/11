@@ -138,3 +138,4 @@ heroku run console
 
 
 ...
+SurveyQuestion.create(title: 'abc', user: User.last, options_attributes: {"0" => {body: 'option 1'}, "1" => {body: 'option 2'}})

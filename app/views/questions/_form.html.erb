@@ -10,16 +10,18 @@
 
   <%= f.input :title %>
   <%= f.input :body %>
-  <%= f.label :tag_list, "Tags (separated by commas)" %>
+
 
   <%# Sometimes we don't want to use all the features from simple_form. In that
   situation, we can just keep using standard form_for fields.
   %>
   <div class="form-group">
+    <%= f.label :tag_list, "Tags (separated by commas)" %>
     <%= f.input_field :tag_list %>
-    <%= f.submit %>
   </div>
 
   <%= f.input :image %>
+
+  <%= f.button :submit %>
 
 <% end %>
