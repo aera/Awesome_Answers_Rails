@@ -4,6 +4,9 @@ class User < ApplicationRecord
 
   has_many :likes, dependent: :destroy
   has_many :liked_questions, through: :likes, source: :question
+  has_many :survey_questions, dependent: :destroy
+
+  has_many :tips, dependent: :nullify
   # has_many's first argument does not have to be another table name. It
   # can be a name of your choosing, but when doing so you must specify details
   # of the association. In this many to many association, we specify the
@@ -33,12 +36,51 @@ class User < ApplicationRecord
   has_many :questions, dependent: :nullify
   has_many :answers, dependent: :nullify
 
+
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i
-  validates :email, presence: true, uniqueness: true, format: VALID_EMAIL_REGEX
+  validates :email, presence: true, uniqueness: true, format: VALID_EMAIL_REGEX, unless: :from_omniauth?
 
   validates :first_name, :last_name, presence: true
 
   before_create :generate_api_key
+
+  serialize :oauth_raw_data
+
+  geocoded_by :address
+  after_validation :geocode
+
+  def self.create_from_omniauth(omniauth_data)
+    full_name = omniauth_data["info"]["name"].split
+    User.create(
+      uid: omniauth_data["uid"],
+      provider: omniauth_data["provider"],
+      email: omniauth_data["info"]["email"],
+      first_name: full_name.first,
+      last_name: full_name.last,
+      oauth_token: omniauth_data["credentials"]["token"],
+      oauth_secret: omniauth_data["credentials"]["secret"],
+      oauth_raw_data: omniauth_data,
+      password: SecureRandom.hex(32)
+    )
+  end
+
+  def self.find_by_omniauth(omniauth_data)
+    User.find_by(provider: omniauth_data["provider"], uid: omniauth_data["uid"])
+  end
+
+  def update_oauth_credentials(omniauth_data)
+    token = omniauth_data["credentials"]["token"]
+    secret = omniauth_data["credentials"]["secret"]
+
+    if oauth_token != token || oauth_secret != secret
+      self.update oauth_token: token, oauth_secret: secret
+    end
+  end
+
+
+  def from_omniauth?
+    uid.present? && provider.present?
+  end
 
   def full_name
     "#{first_name} #{last_name}"

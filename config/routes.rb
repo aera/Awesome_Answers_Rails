@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+
+  get "/auth/twitter", as: :sign_in_with_twitter_path
+  get "/auth/:provider/callback", to: "callbacks#index"
   # using the defaults argument, we can provide a set of options that will act as the new defaults for the nested routes. in this case, every route inside the api namespace will render json by default instead of html.
   namespace :api, defaults: { format: :json } do
     namespace :v1 do
@@ -30,7 +33,8 @@ Rails.application.routes.draw do
   # that is singular, it still expects the controller to be named in plural
   # (i.e. SessionsController)
   resource :session, only: [:new, :create, :destroy]
-  resources :users, only: [:new, :create]
+  resources :users, only: [:new, :create, :show]
+  resources :user_maps, only: [:index]
 
   # Here we want vote routes to be nested inside of answers without
     # creating any routes for the answers themselves. This is why we provide
@@ -41,6 +45,10 @@ Rails.application.routes.draw do
     # parent resource will be by themselves
     resources :answers, only: [], shallow: true do
       resources :votes, only: [:create, :destroy, :update]
+      resources :tips, only: [:new, :create] do
+        resources :payments, only: [:create, :new]
+      end
+
       # /answers/:answer_id/votes
       # /votes/:id
     end

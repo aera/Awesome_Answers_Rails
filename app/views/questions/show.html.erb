@@ -48,13 +48,14 @@ its `action` attribute. Inspect this form to know more! %>
 <% end %> -->
 
 <% if user_signed_in? %>
-
-  <%= simple_form_for [@question, @answer] do |f| %>
-    <%= f.input :body %>
-    <%= f.button :submit %>
-  <% end %>
+  <%= render 'answers/form', question: @question, answer: @answer %>
 <% end %>
 
+<%= render 'answers/answers', answers: @answers %>
+
+
+<%= render 'answers/answers', answers: @answers %>
+<!--
 <ul class='answer-list'>
 <% @answers.each do |answer| %>
   <li>
@@ -105,3 +106,5 @@ its `action` attribute. Inspect this form to know more! %>
   </li>
 <% end %>
 </ul>
+
+-->

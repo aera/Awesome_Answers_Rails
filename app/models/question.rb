@@ -1,4 +1,6 @@
 class Question < ApplicationRecord
+  attr_accessor :tweet_this
+
   mount_uploader :image, ImageUploader
   has_many :taggings, dependent: :destroy
   has_many :tags, through: :taggings
@@ -8,7 +10,7 @@ class Question < ApplicationRecord
 
   # Like `belongs_to`, `has_many` tells Rails that Question is associated to
   # the Answer model.
-  has_many :answers, dependent: :destroy
+  has_many :answers, -> () { order(created_at: :desc) }, dependent: :destroy
   # `dependent: :destroy` will delete all associated answers to the question
   # before the question is deleted.
 
@@ -72,15 +74,19 @@ class Question < ApplicationRecord
   # question.tag_list = 'some,thing,etc'
 
   include AASM
+
+  # DSL: Domain Specific Language, it's Ruby code written in a certain way that
+  #      seems like it's own language to serve a purpose (in this case defining
+  #      the state machine rules)
   aasm whiny_transitions: false do
-    state :draft, initial: true
+    state(:draft, { initial: true })
     state :published
     state :canceled
     state :answered
     state :closed
 
     event :publish do
-      transitions from: [:draft, :answered], to: :published   #:answered in case of a user deleting an answer
+      transitions from: [:draft, :answered], to: :published
     end
 
     event :close do

@@ -1,0 +1,14 @@
+// Use a IIFE (Immediately Invoked Function Express) to isolate variables
+// within the scope of the function. An IIFE is function is called immediately
+// after its declaration.
+(function () {
+  console.log('Logging: <%= @answer.body %>');
+
+  let answersUl = document.querySelector('.answer-list');
+  answersUl.outerHTML =
+  '<%= j render "answers", answers: @question.answers.order(created_at: :desc) %>';
+
+  let newAnswerForm = document.querySelector('form#new_answer');
+  newAnswerForm.outerHTML =
+    '<%= j render "answers/form", question: @question, answer: Answer.new %>';
+})()

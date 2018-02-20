@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170815175830) do
+ActiveRecord::Schema.define(version: 20170824162419) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -94,6 +94,17 @@ ActiveRecord::Schema.define(version: 20170815175830) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "tips", force: :cascade do |t|
+    t.bigint "user_id"
+    t.bigint "answer_id"
+    t.money "amount", scale: 2
+    t.string "txn_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["answer_id"], name: "index_tips_on_answer_id"
+    t.index ["user_id"], name: "index_tips_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "first_name"
     t.string "last_name"
@@ -103,8 +114,17 @@ ActiveRecord::Schema.define(version: 20170815175830) do
     t.datetime "updated_at", null: false
     t.boolean "is_admin", default: false
     t.string "api_key"
+    t.string "address"
+    t.float "longitude"
+    t.float "latitude"
+    t.string "uid"
+    t.string "provider"
+    t.string "oauth_token"
+    t.string "oauth_secret"
+    t.text "outh_raw_data"
     t.index ["api_key"], name: "index_users_on_api_key"
     t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["provider", "uid"], name: "index_users_on_provider_and_uid"
   end
 
   create_table "votes", force: :cascade do |t|
@@ -126,6 +146,8 @@ ActiveRecord::Schema.define(version: 20170815175830) do
   add_foreign_key "survey_questions", "users"
   add_foreign_key "taggings", "questions"
   add_foreign_key "taggings", "tags"
+  add_foreign_key "tips", "answers"
+  add_foreign_key "tips", "users"
   add_foreign_key "votes", "answers"
   add_foreign_key "votes", "users"
 end

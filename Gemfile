@@ -29,6 +29,13 @@ gem 'aasm'
 gem 'cocoon'
 gem 'fog'
 gem 'jwt'
+gem 'stripe'
+
+gem 'omniauth-twitter'
+gem 'twitter'
+gem 'geocoder'
+gem 'gmaps4rails'
+gem 'underscore-rails'
 
 gem 'uglifier', '>= 1.3.0'
 # See https://github.com/rails/execjs#readme for more supported runtimes

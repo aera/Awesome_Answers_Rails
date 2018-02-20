@@ -2,3 +2,6 @@
 # `app_keys.rb`. Do not change this file. Only the copy.
 ENV['EMAIL_USER_NAME'] = 'PUT YOUR EMAIL HERE'
 ENV['EMAIL_PASSWORD'] = 'PUT YOUR PASSWORD HERE'
+
+ENV['STRIPE_PUBLISHABLE_KEY'] = 
+ENV['STRIPE_SECRET_KEY'] =
